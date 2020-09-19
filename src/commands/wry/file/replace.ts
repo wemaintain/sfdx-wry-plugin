@@ -75,6 +75,18 @@ export default class Replace extends SfdxCommand {
             replaceMap[key] = entry.Id;
             //console.log("key='"+key+"'\tvalue="+replaceMap[key]);
         }
+
+        //query Territories
+        try {
+            const territoriesQuery = 'SELECT Id, DeveloperName FROM Territory2 order by DeveloperName';
+            const territoriesResult = await conn.query<Territory2>(territoriesQuery);
+            for(let entry of territoriesResult.records) {
+                const key = "Territory."+entry.DeveloperName;
+                replaceMap[key] = entry.Id;
+            }
+        } catch(e) {
+
+        }
     
         //define a method to process from an incoming directory and output to another - recursive
         function processdir(inputdir : string, outputdir : string) {
@@ -168,6 +180,11 @@ export default class Replace extends SfdxCommand {
         }
       
         interface UserRole {
+            Id: string;
+            DeveloperName: string;
+        }
+
+        interface Territory2 {
             Id: string;
             DeveloperName: string;
         }
